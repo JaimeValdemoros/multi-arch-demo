@@ -15,7 +15,7 @@
         defaultPackage = self.packages.${system}.myproject;
         packages = { inherit native aarch64; };
         devShell = with pkgs; mkShell {
-          buildInputs = [ cargo ];
+          buildInputs = [ cargo podman qemu ];
         };
       }
     );
