@@ -8,7 +8,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        myproject-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.rustPlatform.buildRustPackage {
+        myproject = pkgs.rustPlatform.buildRustPackage {
           pname = "multi-arch-demo";
           version = "1.0.0";
           src = ./.;
@@ -16,18 +16,17 @@
             lockFile = ./Cargo.lock;
           };
         };
-        docker-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.dockerTools.buildLayeredImage {
+        docker = pkgs.dockerTools.buildLayeredImage {
           name = "localhost/myproject";
           config = {
-            Cmd = ["${myproject-aarch64}/bin/multi-arch-demo"];
+            Cmd = ["${myproject}/bin/multi-arch-demo"];
           };
         };
       in
       {
-        defaultPackage = pkgs.pkgsCross.aarch64-multiplatform.stdenv.hostPlatform.emulator { packages = { inherit myproject-aarch64; }; };
-        packages = { inherit myproject-aarch64 docker-aarch64; };
+        packages = { inherit myproject docker; };
         devShell = with pkgs; mkShell {
-          buildInputs = [ cargo qemu ];
+          buildInputs = [ cargo ];
         };
       }
     );
