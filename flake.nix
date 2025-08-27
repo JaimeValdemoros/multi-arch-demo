@@ -8,11 +8,12 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        build = pkgs.callPackage ./default.nix {};
+        native = pkgs.callPackage ./default.nix {};
+        aarch64 = pkgs.pkgsCross.aarch64-multiplatform.callPackage ./default.nix {};
       in
       {
         defaultPackage = self.packages.${system}.myproject;
-        packages = { inherit (build) myproject docker; };
+        packages = { inherit native aarch64; };
         devShell = with pkgs; mkShell {
           buildInputs = [ cargo ];
         };
