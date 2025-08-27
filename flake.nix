@@ -16,9 +16,15 @@
             lockFile = ./Cargo.lock;
           };
         };
+        docker = pkgs.dockerTools.buildLayeredImage {
+          name = "localhost/myproject";
+          config = {
+            Cmd = ["${myproject}/bin/multi-arch-demo"];
+          };
+        };
       in
       {
-        packages = { inherit myproject; };
+        packages = { inherit myproject docker; };
         devShell = with pkgs; mkShell {
           buildInputs = [ cargo ];
         };
