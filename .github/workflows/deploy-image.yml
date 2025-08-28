@@ -1,0 +1,28 @@
+name: Publish Docker image using Nix
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    environment: build
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      checks: write
+    steps:
+      # Checkout repo
+      - name: git checkout
+        uses: actions/checkout@v3
+
+      # Install Nix and set up a local Nix store under /nix/store
+      - name: Install Nix
+        uses: nixbuild/nix-quick-install-action@v30
+
+      - name: Build and push
+        run: nix run .# -- "ghcr.io/${GITHUB_REPOSITORY@L}:${GITHUB_RUN_ID}" --creds "${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}"
