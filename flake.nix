@@ -21,6 +21,7 @@
           HOME=$TMPDIR ${pkgs.podman}/bin/podman manifest create "$MANIFEST" \
             docker-archive:${self.packages.${system}.native.docker} \
             docker-archive:${self.packages.${system}.aarch64.docker}
+          echo "Pushing $MANIFEST"
           HOME=$TMPDIR ${pkgs.podman}/bin/podman manifest push "''${PUSH_ARGS[@]}" "$MANIFEST"
           rm -r "$TMPDIR"
         '';
