@@ -1,3 +1,5 @@
+use std::env::consts::{ARCH, OS};
+
 fn main() {
-    println!("Hello, world!");
+    println!("Hello from {OS}/{ARCH}!");
 }
